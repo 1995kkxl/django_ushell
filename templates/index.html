@@ -34,6 +34,7 @@
             console.log(socket);
             socket.onopen = function () {
                 $("#backup_all").removeAttr("disabled");
+                $("#stop_cmd").attr("disabled","true");
                 console.log('停止执行！');//成功连接上Websocket
                 socket.send($('#stop_cmd').val());//发送数据到服务端
             };
