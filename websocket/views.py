@@ -42,11 +42,9 @@ def echo_once(request):
                         break
                 ssh.close()  # 关闭ssh连接
             elif message =="stop_cmd":
-                print("停止运行")
                 kill_process_with_name("ping")
-                break
+                request.websocket.send("任务已停止！")  # 发送消息到客户端
                 ssh.close()
-
             else:
                 request.websocket.send('没权限!!!'.encode('utf-8'))
 
@@ -55,7 +53,6 @@ def kill_process_with_name(process_name):
     for pid in pid_list:
         try:
             each_pro = psutil.Process(pid)
-            print(each_pro)
             if process_name.lower() in each_pro.name().lower():
                 #print("进程是%s，pid是%s" % (each_pro.name(),each_pro.pid))
                 time.sleep(1)
@@ -64,9 +61,7 @@ def kill_process_with_name(process_name):
                 parent = psutil.Process(parent_pid)
                 for child in parent.children(recursive=True):  # or parent.children() for recursive=False
                     child.kill()
-                    print(child)
                 parent.kill()
-                print(parent.status())
                 break
         except Exception as ret:
             print(ret)
