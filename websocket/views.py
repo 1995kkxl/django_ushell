@@ -5,6 +5,7 @@ import paramiko
 import psutil
 import time
 
+#C
 @accept_websocket
 def echo_once(request):
     if not request.is_websocket():  # 判断是不是websocket连接
