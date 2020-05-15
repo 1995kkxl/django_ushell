@@ -5,20 +5,6 @@ import paramiko
 import psutil
 import time
 
-# def exec_command(comm):
-#     hostname = '192.168.0.162'
-#     username = 'root'
-#     password = 'root'
-#
-#     ssh = paramiko.SSHClient()
-#     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-#     ssh.connect(hostname=hostname, username=username, password=password)
-#     stdin, stdout, stderr = ssh.exec_command(comm,get_pty=True)
-#     result = stdout.read()
-#     ssh.close()
-#     yield result
-
-
 @accept_websocket
 def echo_once(request):
     if not request.is_websocket():  # 判断是不是websocket连接
@@ -64,16 +50,13 @@ def echo_once(request):
                 request.websocket.send('没权限!!!'.encode('utf-8'))
 
 def kill_process_with_name(process_name):
-    print("-------"+process_name)
     pid_list = psutil.pids() #遍历所有进程
-    print(pid_list)
     for pid in pid_list:
         try:
             each_pro = psutil.Process(pid)
             print(each_pro)
             if process_name.lower() in each_pro.name().lower():
-                print(each_pro.pid)
-                print("进程是%s，pid是%s" % (each_pro.name(),each_pro.pid))
+                #print("进程是%s，pid是%s" % (each_pro.name(),each_pro.pid))
                 time.sleep(1)
                 # 杀死父子进程
                 parent_pid = each_pro.pid
