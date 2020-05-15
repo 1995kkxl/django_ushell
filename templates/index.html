@@ -1,0 +1,53 @@
+<!DOCTYPE html >
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>脚本执行</title>
+    <script src="/static/jquery-1.12.4.js"></script>
+    <script type="text/javascript">
+    $(function () {
+        $('#backup_all').click(function () {
+            var socket = new WebSocket("ws://" + window.location.host + "/echo_once/");
+            console.log(socket);
+            socket.onopen = function () {
+                console.log('WebSocket open');//成功连接上Websocket
+                socket.send($('#backup_all').val());//发送数据到服务端
+            };
+            socket.onmessage = function (e) {
+                console.log('message: ' + e.data);//打印服务端返回的数据
+                //$('#messagecontainer').prepend('<p><pre>' + e.data + '</pre></p>');
+                //$('#messagecontainer').prepend('<hr />');
+                //$('#messagecontainer').append(e.data+'<br/>');
+                $('#messagecontainer').append(e.data+'\n');
+                {#$('#messagecontainer').prepend('<hr />');#}
+
+            };
+        });
+        //暂停执行
+        $('#stop_cmd').click(function () {
+            var socket = new WebSocket("ws://" + window.location.host + "/echo_once/");
+            console.log(socket);
+            socket.onopen = function () {
+                console.log('停止执行！');//成功连接上Websocket
+                socket.send($('#stop_cmd').val());//发送数据到服务端
+            };
+        });
+
+    });
+    </script>
+</head>
+<body>
+{#<br>#}
+<button style="margin: 20px;height: 40px;background-color: #00ff00;" type="button" id="backup_all" value="backup_all">
+    执行Shell脚本
+</button>
+<button style="margin: 20px;height: 40px;background-color: #00ff00;" type="button" id="stop_cmd" value="stop_cmd">
+    停止Shell脚本
+</button>
+<h3 style="margin: 20px;">脚本执行结果:</h3>
+<textarea id="messagecontainer" style="margin: 20px;width:800px;height:400px;border: 1px solid cadetblue" rows="10" readonly="readonly">
+
+</textarea>
+<hr/>
+</body>
+</html>
