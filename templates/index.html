@@ -5,8 +5,11 @@
     <title>脚本执行</title>
     <script src="/static/jquery-1.12.4.js"></script>
     <script type="text/javascript">
+
     $(function () {
+        $("#stop_cmd").attr("disabled","true");
         $('#backup_all').click(function () {
+            $("#stop_cmd").removeAttr("disabled","false");
             var socket = new WebSocket("ws://" + window.location.host + "/echo_once/");
             console.log(socket);
             socket.onopen = function () {
@@ -15,11 +18,13 @@
             };
             socket.onmessage = function (e) {
                 console.log('message: ' + e.data);//打印服务端返回的数据
+                $("#backup_all").attr("disabled","true");
                 //$('#messagecontainer').prepend('<p><pre>' + e.data + '</pre></p>');
                 //$('#messagecontainer').prepend('<hr />');
                 //$('#messagecontainer').append(e.data+'<br/>');
                 $('#messagecontainer').append(e.data+'\n');
                 {#$('#messagecontainer').prepend('<hr />');#}
+                $("#messagecontainer").scrollTop($("#messagecontainer")[0].scrollHeight);
 
             };
         });
@@ -28,6 +33,7 @@
             var socket = new WebSocket("ws://" + window.location.host + "/echo_once/");
             console.log(socket);
             socket.onopen = function () {
+                $("#backup_all").removeAttr("disabled");
                 console.log('停止执行！');//成功连接上Websocket
                 socket.send($('#stop_cmd').val());//发送数据到服务端
             };
@@ -38,14 +44,14 @@
 </head>
 <body>
 {#<br>#}
-<button style="margin: 20px;height: 40px;background-color: #00ff00;" type="button" id="backup_all" value="backup_all">
+<button  style="margin: 20px;height: 40px;background-color: #00ff00;" type="button" id="backup_all" value="backup_all">
     执行Shell脚本
 </button>
 <button style="margin: 20px;height: 40px;background-color: #00ff00;" type="button" id="stop_cmd" value="stop_cmd">
     停止Shell脚本
 </button>
 <h3 style="margin: 20px;">脚本执行结果:</h3>
-<textarea id="messagecontainer" style="margin: 20px;width:800px;height:400px;border: 1px solid cadetblue" rows="10" readonly="readonly">
+<textarea id="messagecontainer" name="textarea" style="margin: 20px;width:800px;height:200px;border: 1px solid cadetblue" readonly="readonly">
 
 </textarea>
 <hr/>
