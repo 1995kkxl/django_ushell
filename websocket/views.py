@@ -50,6 +50,7 @@ def echo_once(request):
 
                 ssh.close()  # 关闭ssh连接
             elif message =="stop_task":
+                print("===>",message)
                 cmd = 'for'
                 kill_process_with_name(cmd)
                 request.websocket.send("任务已停止！")  # 发送消息到客户端
