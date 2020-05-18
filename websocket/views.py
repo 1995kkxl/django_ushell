@@ -3,7 +3,9 @@ from dwebsocket.decorators import accept_websocket, require_websocket
 from django.http import HttpResponse
 import paramiko
 import psutil
+from django.contrib import messages
 import time
+import json
 
 #C
 @accept_websocket
@@ -17,10 +19,12 @@ def echo_once(request):
     else:
         for message in request.websocket:
             message = message.decode('utf-8')  # 接收前端发来的数据
-            print(message)
-            if message == 'backup_all':#这里根据web页面获取的值进行对应的操作
-                command = 'bash /root/for.sh'#这里是要执行的命令或者脚本
 
+            print(message)
+            if message == 'start_task':#这里根据web页面获取的值进行对应的操作
+
+                cmd = str('for')
+                command = 'bash /root/' + cmd +'.sh'#这里是要执行的命令或者脚本
                 # 远程连接服务器
                 hostname = '172.16.2.225'
                 username = 'root'
@@ -35,14 +39,19 @@ def echo_once(request):
                 # 循环发送消息给前端页面
                 while True:
                     nextline = stdout.readline().strip()  # 读取脚本输出内容
+
                     #print(nextline.strip())
                     request.websocket.send(nextline) # 发送消息到客户端
                     # 判断消息为空时,退出循环
                     if not nextline:
+                        print("end")
+                        request.websocket.cloe()
                         break
+
                 ssh.close()  # 关闭ssh连接
-            elif message =="stop_cmd":
-                kill_process_with_name("ping")
+            elif message =="stop_task":
+                print("停止任务！",message)
+                kill_process_with_name(cmd)
                 request.websocket.send("任务已停止！")  # 发送消息到客户端
                 ssh.close()
             else:
