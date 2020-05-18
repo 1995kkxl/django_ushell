@@ -19,7 +19,7 @@ def echo_once(request):
             message = message.decode('utf-8')  # 接收前端发来的数据
             print(message)
             if message == 'backup_all':#这里根据web页面获取的值进行对应的操作
-                command = 'bash /root/ping.sh'#这里是要执行的命令或者脚本
+                command = 'bash /root/for.sh'#这里是要执行的命令或者脚本
 
                 # 远程连接服务器
                 hostname = '172.16.2.225'
