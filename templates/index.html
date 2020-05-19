@@ -30,21 +30,21 @@
             socket.onmessage = function (e) {
                 //console.log(e);//打印服务端返回的数据
                 console.log(e.onerror)
+                var recv_data = e.data
                 //$('#messagecontainer').prepend('<p><pre>' + e.data + '</pre></p>');
                 //$('#messagecontainer').prepend('<hr />');
                 {#$('#messagecontainer').append(e.data+'<br/>');#}
                 {#$('#messagecontainer').prepend('<hr />');#}
                 {#滚动条始终最下边#}
-                $('#messagecontainer').append(e.data+'\n');
-                $("#messagecontainer").scrollTop($("#messagecontainer")[0].scrollHeight);
-
+                if (recv_data !=0){
+                    $('#messagecontainer').append(recv_data+'\n');
+                    $("#messagecontainer").scrollTop($("#messagecontainer")[0].scrollHeight);}else {
+                    alert('任务结束！')
+                    $("#start_task").attr("disabled",false);
+                    $("#stop_task").attr("disabled",true);
+                }
             };
-            socket.onclose = function (event) {
-                console.log(event)
-                $("#start_task").attr("disabled",false);
-                $("#stop_task").attr("disabled",true);
 
-            }
         });
         //暂停执行
         $('#stop_task').click(function () {

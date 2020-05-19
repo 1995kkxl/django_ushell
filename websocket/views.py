@@ -39,15 +39,11 @@ def echo_once(request):
                 # 循环发送消息给前端页面
                 while True:
                     nextline = stdout.readline().strip()  # 读取脚本输出内容
-
                     #print(nextline.strip())
                     request.websocket.send(nextline) # 发送消息到客户端
                     # 判断消息为空时,退出循环
                     if not nextline:
-                        print("end")
-                        request.websocket.cloe()
                         break
-
                 ssh.close()  # 关闭ssh连接
             elif message =="stop_task":
                 print("===>",message)
